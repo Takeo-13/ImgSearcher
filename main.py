@@ -62,10 +62,9 @@ def dap(linkarr, filter):
                     img_data = get(linkarr[i]).content
                 with open(os.path.abspath(os.getcwd()) + '/' + filter + '/' + str(i) + '.jpg', 'a+b') as handler:
                     handler.write(img_data)
-                print(f'[NOTICE] Imported to .jpg {i + 1} images of {len(linkarr)}')
+                print(f'{loadbar(i, len(linkarr))} Imported to .jpg {i + 1} images of {len(linkarr)}')
             except:
                 print('[ERROR] Connection was refused, picture is unavailable.')
-            print(loadbar(i, len(linkarr)))
         print(f'[NOTICE] Successfully processed {len(linkarr)} pictures.')
 
 #Methods to work with net and html
@@ -101,8 +100,7 @@ def grab(filter='', p=1):
             del response[i]
             break
         else:
-            print(f'[NOTICE] GOT {i+1} pages of images of {p}')
-            print(loadbar(i,p))
+            print(f'{loadbar(i, p)} GOT {i+1} pages of images of {p}')
         sleep(random.randint(1, 4))
     return parseHtml(response, filter, p)
 
@@ -139,7 +137,12 @@ def parseHtml(rsparr, filter, p):
 
     for i in range(len(onlyClassedAs)):
         onlyClassedAs[i] = onlyClassedAs[i][onlyClassedAs[i].find("\"origin\":"):]
-        onlyClassedAs[i] = json.loads(onlyClassedAs[i][:onlyClassedAs[i].find("}", 1)+1].replace('"origin":', ''))['url']
+        try:
+            onlyClassedAs[i] = json.loads(onlyClassedAs[i][:onlyClassedAs[i].find("}", 1)+1].replace('"origin":', ''))['url']
+            print(onlyClassedAs[i])
+        except:
+            print('[ERROR] Problem with JSON in HTML, skipping.')
+            onlyClassedAs[i] = 'https://www.meme-arsenal.com/memes/15ef8d1ccbb4514e0a758c61e1623b2f.jpg'
     return dap(onlyClassedAs, filter)
 
 if __name__ == '__main__':
