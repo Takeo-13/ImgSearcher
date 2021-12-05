@@ -65,7 +65,7 @@ def dap(linkarr, filter):
                 print(f'{loadbar(i, len(linkarr))} Imported to .jpg {i + 1} images of {len(linkarr)}')
             except:
                 print('[ERROR] Connection was refused, picture is unavailable.')
-        print(f'[NOTICE] Successfully processed {len(linkarr)} pictures.')
+        print(f'[███████████] Successfully processed {len(linkarr)} pictures.')
 
 #Methods to work with net and html
 def grab(filter='', p=1):
