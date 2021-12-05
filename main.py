@@ -138,29 +138,22 @@ def parseHtml(rsparr, filter, p):
             print(f'[NOTICE {str(i+1)}] Obtained IMG link!')
 
     for i in range(len(onlyClassedAs)):
-        onlyClassedAs[i] = onlyClassedAs[i].replace('"', ' ', 2)
-        onlyClassedAs[i] = onlyClassedAs[i][onlyClassedAs[i].find("data-bem="):]
-        onlyClassedAs[i] = onlyClassedAs[i][:onlyClassedAs[i].find("data-size=")].replace('data-bem=\'', '')
-        onlyClassedAs[i] = onlyClassedAs[i][:onlyClassedAs[i].find("data-size=")].replace('"', '', 14)
-        onlyClassedAs[i] = onlyClassedAs[i][onlyClassedAs[i].find('"')+1:]
-        onlyClassedAs[i].replace('"', '')
-        onlyClassedAs[i] = onlyClassedAs[i][:onlyClassedAs[i].find('"')]
-
-
+        onlyClassedAs[i] = onlyClassedAs[i][onlyClassedAs[i].find("\"origin\":"):]
+        onlyClassedAs[i] = json.loads(onlyClassedAs[i][:onlyClassedAs[i].find("}", 1)+1].replace('"origin":', ''))['url']
     return dap(onlyClassedAs, filter)
 
 if __name__ == '__main__':
     if random.uniform(0.0, 1.0) <= 0.95:
-        print('           _ . - = - . _                    Image Grabber \'Blind Eye\' v2.2')
+        print('           _ . - = - . _                    Image Grabber \'Blind Eye\' v3.1')
         print('       . "  \  \   /  /  " .                ')
         print('     ,  \                 /  .              MIT License')
         print('   . \   _,.--~=~"~=~--.._   / .            Copyright (c) 2021 Aprasidze Georgy')
         print('  ;  _.-"  / \ !   ! / \  "-._  .           ')
         print(' / ,"     / ,` .---. `, \     ". \\         ')
-        print('/.    `~  |   /:::::\   |  ~`   \'.\\       - Improved quality of images')
-        print('\`.  `~   |   \:::::/   | ~`  ~ .\'/        - Improved logging')
-        print(' \ `.  `~ \ `, `~~~\' ,`/   ~`.\' /         - Passed out with no reason.')
-        print('  .  "-._  \ / !   ! \ /  _.-"  .           - Made a contract with something diabolic...')
+        print('/.    `~  |   /:::::\   |  ~`   \'.\\       + Improved quality of images A LOT')
+        print('\`.  `~   |   \:::::/   | ~`  ~ .\'/        ')
+        print(' \ `.  `~ \ `, `~~~\' ,`/   ~`.\' /         + Passed out because this devil captured my mind.')
+        print('  .  "-._  \ / !   ! \ /  _.-"  .           + Contract helps me a lot...')
         print('   ./    "=~~.._  _..~~=`"    \.            ')
         print('     ,/         ""          \,              ')
         print('       . _/             \_ .                ')
@@ -169,11 +162,11 @@ if __name__ == '__main__':
 
     else:
         print("""        
-         ,..........   ..........,                          Archive Index 'Great Eye Lib' v5021.0
+         ,..........   ..........,                          Archive Index 'Great Eye Lib' v9999.9
      ,..,'          '.'          ',..,                      Copyright (c) 5026 Shirime-san~
-    ,' ,'            :            ', ',                     Gensokyo License
-   ,' ,'             :             ', ',                    - He has passed out because of tiredness
-  ,' ,'              :              ', ',                   - He has made a contract with Shirime-san youkai!
+    ,' ,'            :            ', ',                     ??■■?■?■ License
+   ,' ,'             :             ', ',                    - We are 50/50
+  ,' ,'              :              ', ',                   - Shirime-senpai is telling him how to code!
  ,' ,'............., : ,.............', ',                  Works with Shirime-san archives~
 ,'  '............   '.'   ............'  ',                 To exit just print 0
  '''''''''''''''''';''';''''''''''''''''''
