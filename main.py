@@ -7,7 +7,8 @@ import fake_useragent
 import random
 from time import sleep
 
-def loadbar(i,p):
+def loadbar(i,p):   #do not kick me pls, i was really unconsious
+                    #do not thust him, it's his work
     percent = (i/p)*100
     if percent >= 100:
         return '[██████████]'
@@ -49,8 +50,8 @@ def dap(linkarr, filter):
         else:
             os.mkdir(filter)
     except FileExistsError:
-        print(f'[NOTICE] Created {filter}_2 dir')
-        os.mkdir(filter + str(len(os.listdir())))
+        print(f'[NOTICE] The same folder, starting from {len(os.listdir(filter))}')
+        ctr = len(os.listdir(filter))
     if len(linkarr) == 0:
         print('[ERROR] Not a single picture. Either there is problem with the Internet, or with proxy.')
     else:
@@ -60,8 +61,9 @@ def dap(linkarr, filter):
                     img_data = get('http://'+linkarr[i]).content
                 else:
                     img_data = get(linkarr[i]).content
-                with open(os.path.abspath(os.getcwd()) + '/' + filter + '/' + str(i) + '.jpg', 'a+b') as handler:
+                with open(os.path.abspath(os.getcwd()) + '/' + filter + '/' + str(i+ctr+1) + '.jpg', 'a+b') as handler:
                     handler.write(img_data)
+                    handler.close()
                 print(f'{loadbar(i, len(linkarr))} Imported to .jpg {i + 1} images of {len(linkarr)}')
             except:
                 print('[ERROR] Connection was refused, picture is unavailable.')
@@ -147,7 +149,7 @@ def parseHtml(rsparr, filter, p):
 
 if __name__ == '__main__':
     if random.uniform(0.0, 1.0) <= 0.95:
-        print('           _ . - = - . _                    Image Grabber \'Blind Eye\' v3.1')
+        print('           _ . - = - . _                    Image Grabber \'Blind Eye\' v3.3')
         print('       . "  \  \   /  /  " .                ')
         print('     ,  \                 /  .              MIT License')
         print('   . \   _,.--~=~"~=~--.._   / .            Copyright (c) 2021 Aprasidze Georgy')
@@ -157,7 +159,7 @@ if __name__ == '__main__':
         print('\`.  `~   |   \:::::/   | ~`  ~ .\'/        ')
         print(' \ `.  `~ \ `, `~~~\' ,`/   ~`.\' /         + Passed out because this devil captured my mind.')
         print('  .  "-._  \ / !   ! \ /  _.-"  .           + Contract helps me a lot...')
-        print('   ./    "=~~.._  _..~~=`"    \.            ')
+        print('   ./    "=~~.._  _..~~=`"    \.            minor: Files now are in the same folder if the same filter')
         print('     ,/         ""          \,              ')
         print('       . _/             \_ .                ')
         print('          " - ./. .\. - "                   Works with Yandex Images')
