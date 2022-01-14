@@ -38,7 +38,8 @@ def proxy_get():
     proxies_plain = []
     proxies_2 = get('https://www.proxy-list.download/api/v1/get?type=http').content.decode().split('\r\n')
     for i in range(len(proxies_2)-1):
-        proxies_plain.append({'http': 'http://'+proxies_2[i]})
+        proxies_plain.append({'http': proxies_2[i]})
+        print(proxies_plain[i])
         print(f'Proxy {i+1}: \'http://{proxies_2[i]}\'')
     return proxies_plain
 
@@ -66,7 +67,8 @@ def dap(linkarr, filter):
                     handler.close()
                 print(f'{loadbar(i, len(linkarr))} Imported to .jpg {i + 1} images of {len(linkarr)}')
             except:
-                print('[ERROR] Connection was refused, picture is unavailable.')
+                print(f'[ERROR {i}] Connection was refused, picture is unavailable.')
+                print(f'[INFO] {linkarr[i]}')
         print(f'[███████████] Successfully processed {len(linkarr)} pictures.')
 
 #Methods to work with net and html
@@ -144,12 +146,13 @@ def parseHtml(rsparr, filter, p):
             print(onlyClassedAs[i])
         except:
             print('[ERROR] Problem with JSON in HTML, skipping.')
+            print('[INFO] '+ onlyClassedAs[i])
             onlyClassedAs[i] = 'https://www.meme-arsenal.com/memes/15ef8d1ccbb4514e0a758c61e1623b2f.jpg'
     return dap(onlyClassedAs, filter)
 
 if __name__ == '__main__':
     if random.uniform(0.0, 1.0) <= 0.95:
-        print('           _ . - = - . _                    Image Grabber \'Blind Eye\' v3.3')
+        print('           _ . - = - . _                    Image Grabber \'Blind Eye\' v3.1')
         print('       . "  \  \   /  /  " .                ')
         print('     ,  \                 /  .              MIT License')
         print('   . \   _,.--~=~"~=~--.._   / .            Copyright (c) 2021 Aprasidze Georgy')
@@ -159,7 +162,7 @@ if __name__ == '__main__':
         print('\`.  `~   |   \:::::/   | ~`  ~ .\'/        ')
         print(' \ `.  `~ \ `, `~~~\' ,`/   ~`.\' /         + Passed out because this devil captured my mind.')
         print('  .  "-._  \ / !   ! \ /  _.-"  .           + Contract helps me a lot...')
-        print('   ./    "=~~.._  _..~~=`"    \.            minor: Files now are in the same folder if the same filter')
+        print('   ./    "=~~.._  _..~~=`"    \.            ')
         print('     ,/         ""          \,              ')
         print('       . _/             \_ .                ')
         print('          " - ./. .\. - "                   Works with Yandex Images')
