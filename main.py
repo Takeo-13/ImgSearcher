@@ -29,6 +29,9 @@ def proxy_get():
 
 # Method to download and pack images basing on filter
 def dap(linkarr, filter):
+    print('[DEBUG] Entered "dap"')
+    ctr = 0
+    print('[DEBUG] Filtered')
     try:
         if filter == '':
             os.mkdir('notag')
@@ -36,7 +39,7 @@ def dap(linkarr, filter):
             os.mkdir(filter)
     except FileExistsError:
         print(f'[NOTICE] The same folder, starting from {len(os.listdir(filter))}')
-        ctr = len(os.listdir(filter))
+        print('[DEBUG] Entered "dap"')
     if len(linkarr) == 0:
         print('[ERROR] Not a single picture. Either there is problem with the Internet, or with proxy.')
     else:
@@ -51,11 +54,8 @@ def dap(linkarr, filter):
                     handler.write(img_data)
                     handler.close()
                 print(f'[{loadbar(i, len(linkarr))}] Imported to .jpg {i + 1} images of {len(linkarr)}')
-            except ConnectionRefusedError:
-                print(f'[ERROR {i}] Connection was refused, picture is unavailable.')
-                print(f'[INFO] {linkarr[i]}')
             except:
-                print(f'[NOTICE {i}] Idk what is this error')
+                print(f'[ERROR {i}] Connection was refused, picture is unavailable.')
                 print(f'[INFO] {linkarr[i]}')
         print(f'[NOTICE] Successfully processed {len(linkarr)} pictures.')
 
