@@ -11,33 +11,12 @@ from time import sleep
 def loadbar(i, p):  # do not kick me pls, i was really unconsious
     # do not thust him, it's his work
     # it's a big joke on project, really. trust me please
-    percent = (i / p) * 100
-    if percent >= 100:
-        return '[██████████]'
-    elif percent >= 90:
-        return '[█████████ ]'
-    elif percent >= 80:
-        return '[████████  ]'
-    elif percent >= 70:
-        return '[███████   ]'
-    elif percent >= 60:
-        return '[██████    ]'
-    elif percent >= 50:
-        return '[█████     ]'
-    elif percent >= 40:
-        return '[████      ]'
-    elif percent >= 30:
-        return '[███       ]'
-    elif percent >= 20:
-        return '[██        ]'
-    elif percent >= 10:
-        return '[█         ]'
-    else:
-        return '[          ]'
+    percent = (i // p) * 10
+    return '█' * percent
 
 
 # Proxy method
-# There can be problemes, i'll refactor it later. When I'll need find more than 50 pages of pictures, of course.
+# There can be problems, i'll refactor it later. When I'll need find more than 50 pages of pictures, of course.
 def proxy_get():
     proxies_plain = []
     proxies_2 = get('https://www.proxy-list.download/api/v1/get?type=http').content.decode().split('\r\n')
@@ -71,9 +50,12 @@ def dap(linkarr, filter):
                           'a+b') as handler:
                     handler.write(img_data)
                     handler.close()
-                print(f'{loadbar(i, len(linkarr))} Imported to .jpg {i + 1} images of {len(linkarr)}')
-            except:
+                print(f'[{loadbar(i, len(linkarr))}] Imported to .jpg {i + 1} images of {len(linkarr)}')
+            except ConnectionRefusedError:
                 print(f'[ERROR {i}] Connection was refused, picture is unavailable.')
+                print(f'[INFO] {linkarr[i]}')
+            except:
+                print(f'[NOTICE {i}] Idk what is this error')
                 print(f'[INFO] {linkarr[i]}')
         print(f'[NOTICE] Successfully processed {len(linkarr)} pictures.')
 
@@ -163,7 +145,7 @@ def parseHtml(rsparr, filter, p):
 
         try:
             onlyClassedAs[i] = \
-            json.loads(onlyClassedAs[i][:onlyClassedAs[i].find("}", 1) + 1].replace('"origin":', ''))['url']
+                json.loads(onlyClassedAs[i][:onlyClassedAs[i].find("}", 1) + 1].replace('"origin":', ''))['url']
             print(onlyClassedAs[i])
 
         except:
