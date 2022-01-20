@@ -73,7 +73,7 @@ def grab(filter='', p=1):
 
     ua = fake_useragent.UserAgent()
     proxies = proxy_get()
-    print('[NOTICE] Proxies acqured!')
+    print('[NOTICE] Proxies acquired!')
 
     for i in range(p):
 
