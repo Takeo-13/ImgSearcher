@@ -1,192 +1,103 @@
-# Imports. Not less, not more.
-from requests import get
-from urllib.parse import quote_plus as qp
+import tkinter.messagebox
+from random import choice as chs
+import webbrowser
 import os, os.path
-import json
-import fake_useragent
-import random
-from time import sleep
+import threading
+
+import scrapper
+from scrapper import *
+
+import tkinter as tk
+from tkinter import ttk
+from tkinter import *
+
+import threading
+
+class Application:
+
+    # this is a function to get the user input from the text input box
+    def getProxyBoxValue(self):
+        userInput = self.proxyVar.get()
+        return userInput
 
 
-def loadbar(i, p):  # do not kick me pls, i was really unconsious
-    # do not thust him, it's his work
-    # it's a big joke on project, really. trust me please
-    percent = (i // p) * 10
-    return '█' * percent
+    # this is the function called when the button is clicked
+    def opengitrep(self):
+        webbrowser.open('https://github.com/Takeo-13/ImgSearcher')
 
 
-# Proxy method
-# There can be problems, i'll refactor it later. When I'll need find more than 50 pages of pictures, of course.
-def proxy_get():
-    proxies_plain = []
-    proxies_2 = get('https://www.proxy-list.download/api/v1/get?type=http').content.decode().split('\r\n')
-    for i in range(len(proxies_2) - 1):
-        proxies_plain.append({'http': proxies_2[i]})
-        print(proxies_plain[i])
-        print(f'Proxy {i + 1}: \'http://{proxies_2[i]}\'')
-    return proxies_plain
+    # this is the function called when the button is clicked
+    def createBill(self):
+        tkinter.messagebox.showinfo('Click!', 'Click!')
 
 
-# Method to download and pack images basing on filter
-def dap(linkarr, filter):
-    print('[DEBUG] Entered "dap"')
-    ctr = 0
-    print('[DEBUG] Filtered')
-    try:
-        if filter == '':
-            os.mkdir('notag')
-        else:
-            os.mkdir(filter)
-    except FileExistsError:
-        print(f'[NOTICE] The same folder, starting from {len(os.listdir(filter))}')
-        print('[DEBUG] Entered "dap"')
-    if len(linkarr) == 0:
-        print('[ERROR] Not a single picture. Either there is problem with the Internet, or with proxy.')
-    else:
-        for i in range(len(linkarr)):
-            try:
-                if 'http' not in linkarr[i]:
-                    img_data = get('http://' + linkarr[i]).content
-                else:
-                    img_data = get(linkarr[i]).content
-                with open(os.path.abspath(os.getcwd()) + '/' + filter + '/' + str(i + ctr + 1) + '.jpg',
-                          'a+b') as handler:
-                    handler.write(img_data)
-                    handler.close()
-                print(f'[{loadbar(i, len(linkarr))}] Imported to .jpg {i + 1} images of {len(linkarr)}')
-            except:
-                print(f'[ERROR {i}] Connection was refused, picture is unavailable.')
-                print(f'[INFO] {linkarr[i]}')
-        print(f'[NOTICE] Successfully processed {len(linkarr)} pictures.')
+    # this is the function called when the button is clicked
+    def openArchives(self):
+        webbrowser.open('https://gymnasium.msu.ru')
+
+    # this is the function called when the button is clicked
+    def startScrapping(self):
+        tkinter.messagebox.showinfo('A little patience!', 'Now wait while the program ends with scrapping, please!')
+        if self.numVar.get().isdigit() != True:
+            tkinter.messagebox.showerror('It must be a number!')
+            return
+
+        threading.Thread(target=scrapper.grab, args=(self.filterVar.get(), int(self.numVar.get()))).start()
 
 
-# Methods to work with net and html
-def grab(filter='', p=1):
-    if p <= 0:
-        print('[FATAL] Switching off')
-        return -1
+    # This is a function which increases the progress bar value by the given increment amount
+    def makeProgress(self):
+        self.scrapProgress['value'] += 1
+        root.update_idletasks()
 
-    url = 'https://yandex.ru/images/search?text'
-    print(url + '=' + qp(filter))
-    response = []
-    cur = 0
+    def __init__(self, master=None):
+        # This is the section of code which creates the a label
+        Label(root, text='Filter:', bg='#808086', font=('arial', 9, 'normal')).place(x=26, y=30)
 
-    ua = fake_useragent.UserAgent()
-    proxies = proxy_get()
-    print('[NOTICE] Proxies acquired!')
+        Label(root, text='Path to proxy file:', bg='#808086', font=('arial', 9, 'normal')).place(x=26, y=65)
 
-    for i in range(p):
+        Label(root, text="Number of pages: ", bg='#808086', font=('arial', 9, 'normal')).place(x=26, y=100)
 
-        try:
-            UA = ua.random
-            headers = {'User-Agent': UA}
-            print(f'\n[NOTICE] Rotating User-Agent to {str(UA)}')
-            curproxy = random.choice(proxies)
-            print(f'[NOTICE] Rotating proxy to {str(curproxy)}')
-            response.append(get(url + '=' + qp(filter) + '&p=' + str(i), proxies=curproxy).content.decode())
+        Label(root, text="(c) Takeo-13 (s4lieri) & Shirime-san Goddess", bg='#808086', font=('arial', 8, 'normal')).place(x=30, y=340)
 
-        except TimeoutError:
-            print('[WARN] Couldn\'t connect to proxie, trying to do without it')
-            response.append(get(url + '=' + qp(filter) + '&p=' + str(i)).content.decode())
+        self.filterVar = Entry(root)
+        self.filterVar.place(x=147, y=30)
 
-        except IndexError:
-            print('[WARN] Proxy is not available anymore, doing without it.')
-            response.append(get(url + '=' + qp(filter) + '&p=' + str(i)).content.decode())
+        self.numVar = Entry(root)
+        self.numVar.place(x=147, y=102)
 
-        if 'ogp.me' in response[i]:
-            print('[WARN] Captcha got, cutting job.')
-            p = i
-            del response[i]
-            break
-
-        else:
-            print(f'{loadbar(i, p)} GOT {i + 1} pages of images of {p}')
-
-        sleep(random.randint(1, 4))
-    return parseHtml(response, filter, p)
+        self.proxyVar=Entry(root, textvariable="Currently Unavailable", state='disabled')
+        self.proxyVar.place(x=147, y=65)
 
 
-def parseHtml(rsparr, filter, p):
-    strarr = []
-    onlyClassedAs = []
-    floor = 0
-    obj = 0
-    ctr = 0
+        # This is the section of code which creates a button
+        Button(root, text='GitHub Repository', bg='#DEDEDE', font=('arial', 8, 'normal'), command=self.opengitrep).place(x=196, y=399)
 
-    for rsp in rsparr:
-        for i in range(len(rsp)):
-            if rsp[i] == '<':
-                strarr.append([''])
-                floor += 1
-                obj = 0
+        Button(root, text='Click!', bg='#DEDEDE', font=('arial', 8, 'normal'), command=self.createBill).place(x=6, y=399)
 
-            elif rsp[i] == '>':
-                if floor == 0:
-                    break
-                strarr.append([''])
-                obj = 0
-                floor += 1
+        Button(root, text='Archives', bg='#FFFFFF', font=('arial', 8, 'normal'), command=self.openArchives).place(x=114, y=399)
 
-            else:
-                if rsp[i] == '/' and rsp[i - 1] != '<' or rsp[i] != '/':
-                    strarr[floor - 1][obj] += rsp[i]
-
-        ctr += 1
-        print(f'[NOTICE] Parsed {ctr} pages of {p}')
-        print(loadbar(ctr, len(rsparr)))
-
-    for i in range(len(strarr)):
-        if 'class=\"serp-item serp-item_type_search' in strarr[i][0] and 'div' in strarr[i][0]:
-            onlyClassedAs.append(strarr[i][0])
-            print(f'[NOTICE {str(i + 1)}] Obtained IMG link!')
-
-    for i in range(len(onlyClassedAs)):
-        onlyClassedAs[i] = onlyClassedAs[i][onlyClassedAs[i].find("\"origin\":"):]
-
-        try:
-            onlyClassedAs[i] = \
-                json.loads(onlyClassedAs[i][:onlyClassedAs[i].find("}", 1) + 1].replace('"origin":', ''))['url']
-            print(onlyClassedAs[i])
-
-        except:
-            print('[ERROR] Problem with JSON in HTML, skipping.')
-            print('[INFO] ' + onlyClassedAs[i])
-            onlyClassedAs[i] = 'https://www.meme-arsenal.com/memes/15ef8d1ccbb4514e0a758c61e1623b2f.jpg'
-
-    return dap(onlyClassedAs, filter)
+        Button(root, text='Start scrapping', bg='#CCCCCC', font=('arial', 8, 'normal'), command=self.startScrapping).place(x=107, y=244)
 
 
-if __name__ == '__main__':
-    if random.uniform(0.0, 1.0) <= 0.95:  # it's a big joke too. of course i wouldn't use SO MUCH PRINTS
-        print("""               _ . - = - . _                    Image Grabber \'Blind Eye\' v3.1
-               . "  \  \   /  /  " .                
-             ,  \                 /  .              
-           . \   _,.--~=~"~=~--.._   / .            Copyright (c) 2021 Aprasidze Georgii
-          ;  _.-"  / \ !   ! / \  "-._  .           
-         / ,"     / ,` .---. `, \     ". \\         
-        /.    `~  |   /:::::\   |  ~`   \'.\\       + Improved quality of images A LOT
-        \`.  `~   |   \:::::/   | ~`  ~ .\'/        
-         \ `.  `~ \ `, `~~~\' ,`/   ~`.\' /         + Passed out because this devil captured my mind.
-          .  "-._  \ / !   ! \ /  _.-"  .           + Contract helps me a lot...
-           ./    "=~~.._  _..~~=`"    \.            
-             ,/         ""          \,              
-               . _/             \_ .                
-                  " - ./. .\. - "                   Works with Yandex Images
-        ----------------------------------------    To exit just print 0""")
+        # This is the section of code which creates a color style to be used with the progress bar
+        self.scrapProgress_style = ttk.Style()
+        self.scrapProgress_style.theme_use('clam')
+        self.scrapProgress_style.configure('scrapProgress.Horizontal.TProgressbar', foreground='#CCCCCC', background='#CCCCCC')
 
-    else:
-        print("""        
-         ,..........   ..........,                          Archive Index 'Great Eye Lib' v9999.9
-     ,..,'          '.'          ',..,                      Copyright (c) 5026 Shirime-san~
-    ,' ,'            :            ', ',                     ??■■?■?■ License
-   ,' ,'             :             ', ',                    - We are 50/50
-  ,' ,'              :              ', ',                   - Shirime-senpai is telling him how to code!
- ,' ,'............., : ,.............', ',                  Works with Shirime-san archives~
-,'  '............   '.'   ............'  ',                 To exit just print 0
- '''''''''''''''''';''';''''''''''''''''''
-                    """)
-    while True:
-        resp = grab(input('\nRequest filter> '), int(input('Amount of pages to parse (30 pictures per page)> ')))
-        if resp == -1:
-            break
-    input('\nEnter to exit...')
+
+        # This is the section of code which creates a progress bar
+        self.scrapProgress=ttk.Progressbar(root, style='scrapProgress.Horizontal.TProgressbar', orient='horizontal', length=299, mode='determinate', maximum=100, value=1)
+        self.scrapProgress.place(x=10, y=275, width=280, height=25)
+
+if __name__ == "__main__":
+    root = Tk()
+
+    # This is the section of code which creates the main window
+    root.geometry('300x428')
+    root.configure(background='#808086')
+    root.title(chs(['Shira', 'AcuteEye', 'Blind (?) Eye', 'Evil (?!) Eye', 'A Cute Eye!']))
+    root.resizable(False, False)
+
+    app = Application(master=root)
+    root.mainloop()
