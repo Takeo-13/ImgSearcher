@@ -1,4 +1,5 @@
 import tkinter.messagebox
+from translate import Translator
 from random import choice as chs
 import webbrowser
 import os, os.path
@@ -42,6 +43,8 @@ class Application:
             tkinter.messagebox.showerror('It must be a number!')
             return
 
+        tr = Translator(to_lang="en")
+        threading.Thread(target=scrapper.grab, args=(tr.translate(self.filterVar.get()), int(self.numVar.get()))).start()
         threading.Thread(target=scrapper.grab, args=(self.filterVar.get(), int(self.numVar.get()))).start()
 
 

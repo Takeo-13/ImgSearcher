@@ -7,6 +7,7 @@ import fake_useragent
 import random
 from time import sleep
 import tkinter
+import argparse
 
 
 def loadbar(i, p):  # do not kick me pls, i was really unconsious
@@ -149,3 +150,10 @@ def parseHtml(rsparr, filter, p):
             onlyClassedAs[i] = 'https://www.meme-arsenal.com/memes/15ef8d1ccbb4514e0a758c61e1623b2f.jpg'
 
     return dap(onlyClassedAs, filter)
+
+if __name__ == "__main__":
+    argparser = argparse.ArgumentParser("scrapper")
+    argparser.add_argument('filter', nargs="+", type=str, help="Filter to search Yandex")
+    argparser.add_argument('pages', nargs="+", type=int, help="Amount of pages to scrap")
+    args = argparser.parse_args()
+    grab(vars(args)['filter'][0], vars(args)['pages'][0])
