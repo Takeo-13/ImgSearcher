@@ -101,6 +101,7 @@ if __name__ == "__main__":
     root.configure(background='#808086')
     root.title(chs(['Shira', 'AcuteEye', 'Blind (?) Eye', 'Evil (?!) Eye', 'A Cute Eye!']))
     root.resizable(False, False)
+    root.iconbitmap('media/AcuteEye.ico')
 
     app = Application(master=root)
     root.mainloop()
